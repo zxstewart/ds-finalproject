@@ -167,22 +167,20 @@ int HashTable::getNumOfCollision()
         //reset time here
         time =0;
 
-        int search[100];//array to hold random values
+        int searcher[100];//array to hold random values
         for(int i =0; i < 100; i++)//putting in random values
         {
-            search[i] = (rand()%ctr);// range 0 to 99... then increase by 100 w each search
+            searcher[i] = (rand()%ctr);// range 0 to 99... then increase by 100 w each search
         }
         chrono::steady_clock::time_point _start(chrono::steady_clock::now());
         for(int i = 0; i < 100; i++)
         {
-            searchItem(search[i]);
+            searchItem(searcher[i]);
         }
         chrono::steady_clock::time_point _end(chrono::steady_clock::now());
         time = chrono::duration_cast<chrono::duration<float>>(_end - _start).count();
-        
-        search[spot] = (time/100);
-        //reset time here
-        time =0;
+        search[spot] = (time/100);//avg
+        time =0;//reset time here
         spot++;//incrementing the places in insert and search arrays
     }
 //somehow save data to external file? to use
