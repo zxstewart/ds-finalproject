@@ -122,7 +122,49 @@ int HashTable::getNumOfCollision()
 }
 
 //------------------------------------------MAIN-------------------------------------------
-int main()
+    int main()
 {
-    //run insert and search time tests and write info to a file
+    int testData[40000];
+    float insert[400];
+    float search[400];
+
+    ifstream inputFile;
+    inputFile.open("dataSetA.csv");
+    count = 0;
+    double time;
+    while(!inputFile.eof())
+    {
+        cin >> testData[count];
+        count++;
+    }
+    int ctr=0; //keeps track of the testData num
+    int spot = 0;//keep track of where in insert and search we are
+    //add data should be in the testData array now 
+    while(sspot < 400)
+   { 
+        for(int i = 0; i < 100; i++)
+        {
+            insertItem(testData[ctr]);
+            ctr++;
+        }
+        insert[spot] = (time/100);//recording average insert time 
+        //reset time here
+        time =0;
+
+        int search[100];//array to hold random values
+        for(int i =0; i < 100; i++)//putting in random values
+        {
+            search[i] = (rand()%ctr);// range 0 to 99... then increase by 100 w each search
+        }
+        for(int i = 0; i < 100; i++)
+        {
+            searchItem(search[i]);
+            //dont forget here we need to add in counting our time 
+        }
+        insert[spot] = (time/100);
+        //reset time here
+        time =0;
+        sspot++;//incrementing the places in insert and search arrays
+    }
+//somehow save data to external file? to use
 }
