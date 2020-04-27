@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <chrono>
 using namespace std;
 //open addressing means values are stored directly in the hash table rather than using buckets
 
@@ -124,29 +125,44 @@ int HashTable::getNumOfCollision()
 //------------------------------------------MAIN-------------------------------------------
     int main()
 {
-    int testData[40000];
+    int testDataA[40000];
+    int testDataB[40000];
     float insert[400];
     float search[400];
 
-    ifstream inputFile;
-    inputFile.open("dataSetA.csv");
+    ifstream myFile("dataSetA.csv");
+        if(!myFile.is_open())
+        {
+            cout << "file failed to open" << endl;
+            return 0;
+        }
+    string line; 
+    string myString;
+    float temp;
     count = 0;
     double time;
-    while(!inputFile.eof())
+    while(getline(myFile, line))
     {
-        cin >> testData[count];
+        stringstream ss(line);
+        getline(ss, myString, ',');
+        temp = stoi(myString);
+        testDataA[count] = temp;
         count++;
     }
-    int ctr=0; //keeps track of the testData num
+    myFile.close();
+    int ctr=0; //keeps track of the num
     int spot = 0;//keep track of where in insert and search we are
     //add data should be in the testData array now 
-    while(sspot < 400)
+    while(spot < 400)//this should only do testDataA
    { 
+        chrono::steady_clock::time_point _start(chrono::steady_clock::now());
         for(int i = 0; i < 100; i++)
         {
-            insertItem(testData[ctr]);
+            insertItem(testDataA[ctr]);
             ctr++;
         }
+        chrono::steady_clock::time_point _end(chrono::steady_clock::now());
+        time = chrono::duration_cast<chrono::duration<float>>(_end - _start).count();
         insert[spot] = (time/100);//recording average insert time 
         //reset time here
         time =0;
@@ -156,15 +172,18 @@ int HashTable::getNumOfCollision()
         {
             search[i] = (rand()%ctr);// range 0 to 99... then increase by 100 w each search
         }
+        chrono::steady_clock::time_point _start(chrono::steady_clock::now());
         for(int i = 0; i < 100; i++)
         {
             searchItem(search[i]);
-            //dont forget here we need to add in counting our time 
         }
-        insert[spot] = (time/100);
+        chrono::steady_clock::time_point _end(chrono::steady_clock::now());
+        time = chrono::duration_cast<chrono::duration<float>>(_end - _start).count();
+        
+        search[spot] = (time/100);
         //reset time here
         time =0;
-        sspot++;//incrementing the places in insert and search arrays
+        spot++;//incrementing the places in insert and search arrays
     }
 //somehow save data to external file? to use
 }
