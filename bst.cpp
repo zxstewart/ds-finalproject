@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <chrono>
+#include <sstream>
 #include <sstream>
 using namespace std;
 
@@ -11,41 +13,26 @@ struct Node
     Node* right;
 };
 
-class BST{
+class BST
+{
     private:
         Node* root;
-        Node* createNode(int data);//done
-        /** since root is a private member we need helper functions
-         to access root for insertion, searching and printing.
-         These helper functions are used for performing recursion **/
-        Node* addNodeHelper(Node*, int);//DONE
-        void printTreeHelper(Node*); //DONE
-        void print2DUtilHelper(Node *, int); //DONE
-
-        Node* searchKeyHelper(Node*, int); //done
-
-        Node* getMinValueNode(Node*); //DONE
-        Node* getMaxValueNode(Node*); //DONE
-
-        void destroyNode(Node *root); //DONE
-
-        Node* deleteNode(Node*, int);//DONE
-
+        Node* createNode(int data);
+        Node* addNodeHelper(Node*, int);
+        void printTreeHelper(Node*);
+        //void print2DUtilHelper(Node *, int);  already have printTree function so i dont think we need this?
+        Node* searchKeyHelper(Node*, int);
+        void destroyNode(Node *root);
 
     public:
-        Node* getRoot();                // Returns the root of the tree; DONE
-        void addNode(int);              // function to insert a node in the tree. DONE
-        bool searchKey(int);            // function to search a data in the tree DONE
-        void printTree();               //function to print the tree DONE
-        BST();                          // default constructor DONE
-        BST(int data);                  // parameterized constructor DONE
-        ~BST();                         // destructor DONE
-        //after this idk if any of it is necessary? like fr
-        void removeRange(int, int); //DONE but unnecessary 
-        void print2DUtil(int); //DONE
-        bool isValidBST(); //DOne
-        bool valid(Node*, int, int); //DONE
-
+        Node* getRoot();                // Returns the root of the tree
+        void addNode(int);              // function to insert a node in the tree.
+        bool searchKey(int);            // function to search a data in the tree
+        void printTree();               //function to print the tree
+        BST();                          // default constructor
+        BST(int data);                  // parameterized constructor
+        ~BST();                         // destructor
+        //void print2DUtil(int);
 };
 
 //---------------------------------------------------------------------------------------------------------------------------------
@@ -63,34 +50,25 @@ BST::BST()
 {
 }
 
-/**
-parameterized constructor. It will create the root and put the data in the root.
-**/
-
 BST::BST(int data)
 {
     root = createNode(data);
     cout<< "New tree created with "<<data<<endl;
 }
 
-/**
-Destructor
-**/
-
-BST::~BST(){
+BST::~BST()//destructor
+{
      destroyNode(root);
 }
 
 
-Node* BST::getRoot(){
+Node* BST::getRoot()
+{
     return root;
 }
 
- /**
- This function will destroy the subtree rooted at currNode.
- Think about in what order should you destroy. POSTORDER. or right-left-root
- **/
-void BST:: destroyNode(Node *currNode){
+void BST:: destroyNode(Node *currNode)
+{
      if(currNode!=NULL)
      {
          destroyNode(currNode->left);
@@ -101,62 +79,50 @@ void BST:: destroyNode(Node *currNode){
      }
  }
 
-/*
-Prints a binary tree in a 2D fashion.
-Note: The image of the tree is left rotated by 90 degrees.
-*/
-void BST::print2DUtilHelper(Node *currNode, int space)
-{
-    // Base case
-    if (currNode == NULL)
-        return;
+// void BST::print2DUtilHelper(Node *currNode, int space)
+// {
+//     if (currNode == NULL)
+//     {
+//         return;
+//     }
 
-    // Increase distance between levels
-    space += COUNT;
+//     space += COUNT; //idk what this is doing or why there's an error...
 
-    // Process right child first
-    print2DUtilHelper(currNode->right, space);
+//     // Process right child first
+//     print2DUtilHelper(currNode->right, space);
+//     // Print current node after space
+//     // count
+//     printf("\n");
+//     for (int i = COUNT; i < space; i++)
+//     {
+//         printf(" ");
+//         printf("%d\n", currNode->key);
+//     }
+//     // Process left child
+//     print2DUtilHelper(currNode->left, space);
+// }
 
-    // Print current node after space
-    // count
-    printf("\n");
-    for (int i = COUNT; i < space; i++)
-        printf(" ");
-    printf("%d\n", currNode->key);
-
-    // Process left child
-    print2DUtilHelper(currNode->left, space);
-}
-
-void BST::print2DUtil( int space)
-{
-  print2DUtilHelper(root, space);
-}
-
-
-
-//---------------------------- INSERT NODE IN THE TREE --------------------------------------
-
-/**
-This function will add the data in the tree rooted at currNode.
-We will call this function from addNode.
-**/
+// void BST::print2DUtil( int space)
+// {
+//   print2DUtilHelper(root, space);
+// }
 
 Node* BST:: addNodeHelper(Node* currNode, int data)
 {
-    if(currNode == NULL){
+    if(currNode == NULL)
+    {
         return createNode(data);
     }
-    else if(currNode->key < data){
+    else if(currNode->key < data)
+    {
         currNode->right = addNodeHelper(currNode->right,data);
     }
-    else if(currNode->key > data){
+    else if(currNode->key > data)
+    {
         currNode->left = addNodeHelper(currNode->left,data);
     }
     return currNode;
-
 }
-
 
 void BST:: addNode(int data)
 {
@@ -164,13 +130,8 @@ void BST:: addNode(int data)
     cout<<data<<" has been added"<<endl;
 }
 
-//-----------------------------------------PRINT TREE (INORDER TRAVERSAL)--------------------------------
-
-/** This function will traverse the tree in-order and print out the node elements.
-printTree() function will call this function.
-**/
-
-void BST:: printTreeHelper(Node* currNode){
+void BST:: printTreeHelper(Node* currNode)
+{
      if(currNode)
      {
         printTreeHelper( currNode->left);
@@ -179,17 +140,14 @@ void BST:: printTreeHelper(Node* currNode){
      }
  }
 
-void BST:: printTree(){
+void BST:: printTree()
+{
      printTreeHelper(root);
      cout<<endl;
 }
 
- //------------------------------------------------SEARCH A KEY------------------------------------------
- /** This function will search the data in a tree
-     We will call this function from searchKey.
- **/
-
-Node* BST::searchKeyHelper(Node* currNode, int data){
+Node* BST::searchKeyHelper(Node* currNode, int data)
+{
     if(currNode == NULL)
         return NULL;
 
@@ -203,139 +161,98 @@ Node* BST::searchKeyHelper(Node* currNode, int data){
 }
 
 // This function will return whether a key is in the tree
-bool BST::searchKey(int key){
+bool BST::searchKey(int key)
+{
     Node* tree = searchKeyHelper(root, key);
-    if(tree != NULL) {
+    if(tree != NULL)
+    {
         return true;
     }
     cout<<"Key not present in the tree"<<endl;
     return false;
 }
 
-//--------------------------- Get Max and Min value Node ------------------------------------------------
-
-Node* BST::getMaxValueNode(Node* currNode){
-    if(currNode->right == NULL){
-        return currNode;
-    }
-    return getMaxValueNode(currNode->right);
-}
-
-Node* BST::getMinValueNode(Node* currNode){
-
-    if(currNode->left == NULL){
-      return currNode;
-    }
-    return getMinValueNode(currNode->left);
-}
-
-
-//--------------------------- Delete a Node ------------------------------------------------
-
-// This function deletes the Node with 'value' as it's key. This is to be called inside removeRange() function
-// SILVER TODO Complete the implementation of this function
-Node* BST::deleteNode(Node *currNode, int value)
-{
-
-  if(currNode == NULL)
-  {
-    return NULL;
-  }
-  else if(value < currNode->key)
-  {
-    currNode->left = deleteNode(currNode->left, value);
-  }
-  else if(value > currNode->key)
-  {
-    currNode->right = deleteNode(currNode->right, value);
-  }
-  // We found the node with the value
-  else
-  {
-    //TODO Case : No child
-    if(currNode->left == NULL && currNode->right == NULL)
-    {
-        delete(currNode);
-        return NULL;
-    }
-    //TODO Case : Only right child
-    else if(currNode->left == NULL)
-    {
-        struct Node *temp = currNode -> right;
-        delete(currNode);
-        return temp;
-    }
-    //TODO Case : Only left child
-    else if(currNode->right == NULL)
-    {
-        struct Node *temp = currNode -> left;
-        delete(currNode);
-        return temp;
-    }
-    //TODO Case: Both left and right child
-    else
-    {
-      ///Replace with Minimum from right subtree
-        Node* sp = root-> right;
-        Node* s = root -> right;//find successor
-        while(s->left != NULL)
-        {
-            sp = s;
-            s = s ->left;
-        }
-        sp->left = s->right;//delte s since its always left child of its parent
-        currNode->key = s->key;//copy s data to currNode
-        delete s;//delete s and return currNode
-        return currNode;
-    }
-
-  }
-return currNode;
-}
-
-// This function removes nodes with values in the range low and high.
-// You need to call deleteNode() function inside this function
-
-void BST::removeRange(int low, int high)
-{
-  for(int i=low; i<=high; i++){
-    root=deleteNode(root,i);
-  }
-}
-
-// ------------------------------------ Check for a Valid BST ------------------------------------------------
-
-// GOLD TODO
-
-bool BST::valid(Node*root, int min, int max)
-{
-    if(root == NULL)
-    {
-     return true;
-    }
-    if(root->key < min || root ->key > max)//like if outside range?
-    {
-        return false;
-    }
-    int minL = getMinValueNode(root->left) -> key;
-    int maxL = getMaxValueNode(root->left) -> key;
-    int minR = getMinValueNode(root->right) -> key;
-    int maxR = getMaxValueNode(root->right) -> key;
-    return valid(root->left,minL,maxL) && valid(root->right,minR,maxR);
-}
-bool BST::isValidBST()
-{
-  //TODO Uncomment below and Complete this function, you can use any logic (add a helper function if you want)
-  //everything in left subtree should be smaller than nodes value
-  //nodes value should be < than everything in the right subtree
-  int a = getMinValueNode(root) -> key;
-  int b = getMinValueNode(root) -> key;
-  bool returnVal = valid(root, a, b);
-  return returnVal; //huh?
-}
-
 //------------------------------------------MAIN-------------------------------------------
 int main()
 {
     //run insert and search time tests and write info to a file
+    BST tree;
+    int testDataA[40000];
+    int testDataB[40000];
+    float insert[400];
+    float search[400];
+
+    ifstream myFile("dataSetA.csv");
+        if(!myFile.is_open())
+        {
+            cout << "file failed to open" << endl;
+            return 0;
+        }
+    string line; 
+    string myString;
+    float temp;
+    int count = 0;
+    double time;
+    bool found;
+    while(getline(myFile, line))
+    {
+        stringstream ss(line);
+        while(getline(ss, myString, ','))
+        {
+            temp = stoi(myString);
+            testDataA[count] = temp;
+            count++;
+        }
+    }
+    myFile.close();
+    int ctr=0; //keeps track of the num
+    int spot = 0;//keep track of where in insert and search we are
+    //add data should be in the testData array now 
+    while(spot < 400)//this should only do testDataA
+   { 
+        chrono::steady_clock::time_point _start(chrono::steady_clock::now());
+        for(int i = 0; i < 100; i++)
+        {
+            tree.addNode(testDataA[ctr]);
+            ctr++;
+        }
+        chrono::steady_clock::time_point _end(chrono::steady_clock::now());
+        time = chrono::duration_cast<chrono::duration<float>>(_end - _start).count();
+        insert[spot] = (time/100);//recording average insert time 
+        //reset time here
+        time =0;
+
+        int searcher[100];//array to hold random values
+        for(int i =0; i < 100; i++)//putting in random values
+        {
+            searcher[i] = (rand()%ctr);// range 0 to 99... then increase by 100 w each search
+        }
+        chrono::steady_clock::time_point _start(chrono::steady_clock::now());
+        for(int i = 0; i < 100; i++)
+        {
+            found = tree.searchKey(searcher[i]);
+        }
+        chrono::steady_clock::time_point _end(chrono::steady_clock::now());
+        time = chrono::duration_cast<chrono::duration<float>>(_end - _start).count();
+        search[spot] = (time/100);//avg
+        time =0;//reset time here
+        spot++;//incrementing the places in insert and search arrays
+    }
+    //write to a file
+    cout << "collecting insert data..." << endl;
+    ofstream fileOut;
+    fileOut.open("treeInsertSetA.txt"); //just change this title when we run it w the different data set
+    for(int i = 0; i < 400; i++)
+    {
+        fileOut << insert[i] << endl;
+    }
+    fileOut.close();
+    cout << "collecting search data..." << endl;
+    ofstream file2Out;
+    file2Out.open("treeSearchSetA.txt");
+    for(int j = 0; j < 400; j++)
+    {
+        file2Out << search[j] << endl;
+    }
+    file2Out.close();
 }
