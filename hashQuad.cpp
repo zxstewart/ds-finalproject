@@ -1,9 +1,9 @@
 #include <string>
 #include <list> //idk if we need this but included just in case
 #include <iostream>
+#include <chrono>
 #include <fstream>
 #include <sstream>
-#include <chrono>
 using namespace std;
 //open addressing means values are stored directly in the hash table rather than using buckets
 
@@ -55,17 +55,19 @@ unsigned int HashTable::hashFunction(int key)
 
     int idx = hashFunction(key);
     int i = 0;
-    while(table[idx] != NULL && table[idx]->key != key)
-    {
-        i++;
-        idx = idx + (i*i);  //this is the quadratic probing thing... p sure this is the only difference from linear probing
-        idx %= capacity;
-    }
+    
     if(table[idx] == NULL)
     {
         tableSize++;
         table[idx] = temp;
         added = true;
+    }
+    while(table[idx] != NULL && table[idx]->key != key && added == false)
+    {
+        colNum++;   
+        i++;
+        idx = idx + (i*i);  //this is the quadratic probing thing...
+        idx %= capacity;
     }
     return added;
  }
@@ -92,15 +94,15 @@ void HashTable:: printTable()
 
 node* HashTable:: searchItem(int key)
 {
-    int idx = hashFunction(key);//find the bucket its stored in
+    int idx = hashFunction(key);
     bool foundKey = false;
-    int count = 0;
 
     while(table[idx] != NULL)
     {
-        if(count++ >= capacity)
+        if(idx++ >= capacity)
         {
-            //circle back to beginning of table array somehow
+            //circle back to beginning of table array
+            idx = 0;
         }
         if(table[idx]->key == key)
         {
@@ -118,13 +120,14 @@ node* HashTable:: searchItem(int key)
 
 int HashTable::getNumOfCollision()
 {
-    //yeah i really have no idea how to do this...
     return colNum;
 }
 
 //------------------------------------------MAIN-------------------------------------------
-    int main()
+int main()
 {
+    //run insert and search time tests and write info to a file
+    HashTable HTable;
     int testDataA[40000];
     int testDataB[40000];
     float insert[400];
@@ -139,15 +142,19 @@ int HashTable::getNumOfCollision()
     string line; 
     string myString;
     float temp;
-    count = 0;
+    int count = 0;
     double time;
+    bool add;
+    node* idk;
     while(getline(myFile, line))
     {
         stringstream ss(line);
-        getline(ss, myString, ',');
-        temp = stoi(myString);
-        testDataA[count] = temp;
-        count++;
+        while(getline(ss, myString, ','))
+        {
+            temp = stoi(myString);
+            testDataA[count] = temp;
+            count++;
+        }
     }
     myFile.close();
     int ctr=0; //keeps track of the num
@@ -158,7 +165,7 @@ int HashTable::getNumOfCollision()
         chrono::steady_clock::time_point _start(chrono::steady_clock::now());
         for(int i = 0; i < 100; i++)
         {
-            insertItem(testDataA[ctr]);
+            add = HTable.insertItem(testDataA[ctr]);
             ctr++;
         }
         chrono::steady_clock::time_point _end(chrono::steady_clock::now());
@@ -175,7 +182,7 @@ int HashTable::getNumOfCollision()
         chrono::steady_clock::time_point _start(chrono::steady_clock::now());
         for(int i = 0; i < 100; i++)
         {
-            searchItem(searcher[i]);
+            idk = HTable.searchItem(searcher[i]);
         }
         chrono::steady_clock::time_point _end(chrono::steady_clock::now());
         time = chrono::duration_cast<chrono::duration<float>>(_end - _start).count();
@@ -183,5 +190,21 @@ int HashTable::getNumOfCollision()
         time =0;//reset time here
         spot++;//incrementing the places in insert and search arrays
     }
-//somehow save data to external file? to use
+    //write to a file
+    cout << "collecting insert data..." << endl;
+    ofstream fileOut;
+    fileOut.open("hashQuadInsertSetA.txt"); //just change this title when we run it w the different data set
+    for(int i = 0; i < 400; i++)
+    {
+        fileOut << insert[i] << endl;
+    }
+    fileOut.close();
+    cout << "collecting search data..." << endl;
+    ofstream file2Out;
+    file2Out.open("hashQuadSearchSetA.txt");
+    for(int j = 0; j < 400; j++)
+    {
+        file2Out << search[j] << endl;
+    }
+    file2Out.close();
 }
