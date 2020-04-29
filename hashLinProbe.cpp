@@ -50,8 +50,10 @@ unsigned int HashTable::hashFunction(int key)
 
  bool HashTable::insertItem(int key)    //returns true if able to add
  {
+    //cout << "inserting" << endl;
     bool added = false;
-    node* temp = createNode(key);
+    node* temp = new node;
+    temp->key = key;
 
     int idx = hashFunction(key);
     if(table[idx] == NULL)
@@ -90,29 +92,34 @@ void HashTable:: printTable()
 
 node* HashTable:: searchItem(int key)
 {
+    //cout << "searching" << endl;
     int idx = hashFunction(key);
     bool foundKey = false;
     int count = 0;
 
-    while(table[idx] != NULL)
+    while(table[idx] != NULL && !foundKey)
     {
-        if(idx++ >= capacity)
-        {
-            //circle back to beginning of table array
-            idx = 0;
-        }
+        //cout << "enter search while" << endl;
         if(table[idx]->key == key)
         {
+            //cout << "check second if" << endl;
             return table[idx];
             foundKey = true;
             idx++;
             idx %= capacity;
+        }
+        if(idx++ >= capacity)   //searching past table capacity
+        {
+            //cout << "check first if" << endl;
+            //circle back to beginning of table array
+            idx = 0;
         }
         if(!foundKey)
         {
             return NULL;
         }
     }
+    //cout << "search while loop ended" << endl;
 }
 
 int HashTable::getNumOfCollision()
@@ -130,7 +137,7 @@ int main()
     float insert[400];
     float search[400];
 
-    ifstream myFile("dataSetA.csv");
+    ifstream myFile("dataSetB.csv");
         if(!myFile.is_open())
         {
             cout << "file failed to open" << endl;
@@ -190,7 +197,7 @@ int main()
     //write to a file
     cout << "collecting insert data..." << endl;
     ofstream fileOut;
-    fileOut.open("hashLinProbeInsertSetA.txt"); //just change this title when we run it w the different data set
+    fileOut.open("hashLinProbeInsertSetB.txt"); //just change this title when we run it w the different data set
     for(int i = 0; i < 400; i++)
     {
         fileOut << insert[i] << endl;
@@ -198,7 +205,7 @@ int main()
     fileOut.close();
     cout << "collecting search data..." << endl;
     ofstream file2Out;
-    file2Out.open("hashLinProbeSearchSetA.txt");
+    file2Out.open("hashLinProbeSearchSetB.txt");
     for(int j = 0; j < 400; j++)
     {
         file2Out << search[j] << endl;
