@@ -24,6 +24,7 @@ class LinkedList
     void insert(LLNode *prev, int newKey);
     LLNode* searchList(int key);
     void printList();
+    LLNode* findHead();
 };
 
 //------------------------------------------------------------------------------------------------------------
@@ -53,7 +54,10 @@ void LinkedList::insert(LLNode* prev, int newKey)
       prev->next = newNode;
     }
   }
-
+LLNode* LinkedList:: findHead()
+{
+    return head;
+}
 // Print the keys in your list
 void LinkedList::printList()
 {
@@ -115,10 +119,21 @@ int main()
     //add data should be in the testData array now 
     while(spot < 400)//this should only do testDataA
    { 
+       LLNode* prev = LList.findHead();
+       int ah = 0;
         chrono::steady_clock::time_point _start(chrono::steady_clock::now());
         for(int i = 0; i < 100; i++)
         {
-            LList.insert(testDataA[ctr]);
+            LList.insert(prev, testDataA[ctr]);
+            if(ah == 0)
+            {
+                prev = LList.findHead();
+                ah++;
+            }
+            else
+            {
+                prev = prev->next;
+            }
             ctr++;
         }
         chrono::steady_clock::time_point _end(chrono::steady_clock::now());
@@ -126,19 +141,18 @@ int main()
         insert[spot] = (time/100);//recording average insert time 
         //reset time here
         time =0;
-
         int searcher[100];//array to hold random values
         for(int i =0; i < 100; i++)//putting in random values
         {
             searcher[i] = (rand()%ctr);// range 0 to 99... then increase by 100 w each search
         }
-        chrono::steady_clock::time_point _start(chrono::steady_clock::now());
+        chrono::steady_clock::time_point _start2(chrono::steady_clock::now());
         for(int i = 0; i < 100; i++)
         {
             found = LList.searchList(searcher[i]);
         }
-        chrono::steady_clock::time_point _end(chrono::steady_clock::now());
-        time = chrono::duration_cast<chrono::duration<float>>(_end - _start).count();
+        chrono::steady_clock::time_point _end2(chrono::steady_clock::now());
+        time = chrono::duration_cast<chrono::duration<float>>(_end2 - _start2).count();
         search[spot] = (time/100);//avg
         time =0;//reset time here
         spot++;//incrementing the places in insert and search arrays
@@ -161,3 +175,4 @@ int main()
     }
     file2Out.close();
 }
+
