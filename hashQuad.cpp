@@ -51,7 +51,8 @@ unsigned int HashTable::hashFunction(int key)
  bool HashTable::insertItem(int key)    //returns true if able to add
  {
     bool added = false;
-    node* temp = createNode(key);
+    node* temp = new node;
+    temp->key = key;
 
     int idx = hashFunction(key);
     int i = 0;
@@ -99,17 +100,17 @@ node* HashTable:: searchItem(int key)
 
     while(table[idx] != NULL)
     {
-        if(idx++ >= capacity)
-        {
-            //circle back to beginning of table array
-            idx = 0;
-        }
         if(table[idx]->key == key)
         {
             return table[idx];
             foundKey = true;
             idx++;
             idx %= capacity;
+        }
+        if(idx++ >= capacity)
+        {
+            //circle back to beginning of table array
+            idx = 0;
         }
         if(!foundKey)
         {
@@ -133,7 +134,7 @@ int main()
     float insert[400];
     float search[400];
 
-    ifstream myFile("dataSetA.csv");
+    ifstream myFile("dataSetB.csv");
         if(!myFile.is_open())
         {
             cout << "file failed to open" << endl;
@@ -193,7 +194,7 @@ int main()
     //write to a file
     cout << "collecting insert data..." << endl;
     ofstream fileOut;
-    fileOut.open("hashQuadInsertSetA.txt"); //just change this title when we run it w the different data set
+    fileOut.open("hashQuadInsertSetB.txt"); //just change this title when we run it w the different data set
     for(int i = 0; i < 400; i++)
     {
         fileOut << insert[i] << endl;
@@ -201,7 +202,7 @@ int main()
     fileOut.close();
     cout << "collecting search data..." << endl;
     ofstream file2Out;
-    file2Out.open("hashQuadSearchSetA.txt");
+    file2Out.open("hashQuadSearchSetB.txt");
     for(int j = 0; j < 400; j++)
     {
         file2Out << search[j] << endl;
