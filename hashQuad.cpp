@@ -179,13 +179,13 @@ int main()
         {
             searcher[i] = (rand()%ctr);// range 0 to 99... then increase by 100 w each search
         }
-        chrono::steady_clock::time_point _start(chrono::steady_clock::now());
+        chrono::steady_clock::time_point _start2(chrono::steady_clock::now());
         for(int i = 0; i < 100; i++)
         {
             idk = HTable.searchItem(searcher[i]);
         }
-        chrono::steady_clock::time_point _end(chrono::steady_clock::now());
-        time = chrono::duration_cast<chrono::duration<float>>(_end - _start).count();
+        chrono::steady_clock::time_point _end2(chrono::steady_clock::now());
+        time = chrono::duration_cast<chrono::duration<float>>(_end2 - _start2).count();
         search[spot] = (time/100);//avg
         time =0;//reset time here
         spot++;//incrementing the places in insert and search arrays
