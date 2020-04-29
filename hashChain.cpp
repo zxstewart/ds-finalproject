@@ -22,7 +22,7 @@ class HashTable
     node* createNode(int key, node* next);
 public:
     HashTable();  // Constructor
-    bool isEmpty(); //check if the table is empty
+    bool isEmpty(int index); //check if the table is empty
     bool insertItem(int key);// inserts a key into hash table
     //do we need a remove function? i don't think so but idk
     unsigned int hashFunction(int key);// hash function to map values to key
@@ -40,17 +40,17 @@ HashTable::HashTable()//seems right to me so far... idk if anything needs to be 
     for(int i = 0 ; i < tableSize; i++)//setting everything to null
     {
         table[i] = new node;
-        table[i]->key = NULL;
+        //table[i]->key = NULL;
         table[i]->next = NULL;
     }
 }
 
-bool HashTable::isEmpty()
+bool HashTable::isEmpty(int index)
 {
     int sum = 0;
     for(int i = 0; i < tableSize; i++)
     {
-        if(table[i]->key != NULL)
+        if(table[i]->key)//!= NULL
         {
             sum += table[i]->key;
         }
@@ -79,7 +79,7 @@ unsigned int HashTable::hashFunction(int key)
  {
      bool return_Val = false;
      int index = hashFunction(key);
-     if(isEmpty)//if its empty
+     if(isEmpty(index))//if its empty agh here 
      {
         table[index]->key = key;//overwrite with key given
         return_Val = true;
@@ -99,12 +99,13 @@ unsigned int HashTable::hashFunction(int key)
          ptr->next = n; // linking the last item in list to newly created item
         return_Val = true;
      }
+     return return_Val;
  }
 
 int HashTable::numIndexItems(int index)
 {
     int count = 0;
-    if(table[index]->key != NULL)
+    if(table[index]->key)// != NULL
     {
         count++;//count first item
         node* ptr = table[index];//points to being of list thats in tht bucket
@@ -141,23 +142,16 @@ node* HashTable:: searchItem(int key)
     int bucket = hashFunction(key);//find the bucket its stored in
     bool foundKey = false;
     node* ptr = table[bucket]; //pointer that points to first item in the bucket
-    while(ptr->key != NULL) //scan entire list (as long as ptr points to something)
+    while((ptr->key) && (ptr!= NULL)) // != NULL scan entire list (as long as ptr points to something)
     {
         if(ptr->key == key)//seeing if the keys match
         {
             foundKey = true;//mark that we found a match
+            return ptr;
         }
         ptr = ptr->next;
     }
-    if(foundKey == true)//if we kow we found the value then return the ptr val
-    {
-        return ptr;//ptr should be pointng to the right one
-    }
-    else
-    {
-        return NULL;
-        //will need to check for NULL when we use this function... if (returnVal != NULL)... blah blah blah
-    }
+    return NULL;
 }
 
 //------------------------------------------MAIN-------------------------------------------
@@ -210,19 +204,18 @@ int main()
         insert[spot] = (time/100);//recording average insert time 
         //reset time here
         time =0;
-
         int searcher[100];//array to hold random values
         for(int i =0; i < 100; i++)//putting in random values
         {
             searcher[i] = (rand()%ctr);// range 0 to 99... then increase by 100 w each search
         }
-        chrono::steady_clock::time_point _start(chrono::steady_clock::now());
+        chrono::steady_clock::time_point _start2(chrono::steady_clock::now());
         for(int i = 0; i < 100; i++)
         {
             find = HTable.searchItem(searcher[i]);
         }
-        chrono::steady_clock::time_point _end(chrono::steady_clock::now());
-        time = chrono::duration_cast<chrono::duration<float>>(_end - _start).count();
+        chrono::steady_clock::time_point _end2(chrono::steady_clock::now());
+        time = chrono::duration_cast<chrono::duration<float>>(_end2 - _start2).count();
         search[spot] = (time/100);//avg
         time =0;//reset time here
         spot++;//incrementing the places in insert and search arrays
