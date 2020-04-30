@@ -5,8 +5,8 @@ Authors and Contributions:
 (note: We did not split up tasks for each other very strictly for this project, as we spent most of the time working together over
 zoom. We shared tasks back and forth when the other got a little stuck, and frequently checked each other's work throughout the process)
 Zoe Cruse-
-~ Initially set up the project by creating files and collecting Linked List and Binary Search Tree headers and functions from our previous homework assignments.
-~ Set up the preliminary code for the hashChain file, and worked on understanding and implementing the chrono functions in the drivers
+~ Initially set up the project by creating files and collecting Linked List and Binary Search Tree headers and functions from our previous assignments.
+~ Set up and developed the preliminary code for the hash files and code for hashChain, worked on understanding and implementing the chrono functions in the drivers as well as developing main functions for each file
 ~ Created and formatted our graphs in the Google Sheets document
 ~ Worked on the typed up report
 
