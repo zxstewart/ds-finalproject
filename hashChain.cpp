@@ -231,23 +231,23 @@ int main()
         time =0;//reset time here
         spot++;//incrementing the places in insert and search arrays
     }
-    // //write to a file
-    // cout << "collecting insert data..." << endl;
-    // ofstream fileOut;
-    // fileOut.open("hashChainInsertSetB.txt"); //just change this title when we run it w the different data set
-    // for(int i = 0; i < 400; i++)
-    // {
-    //     fileOut << insert[i] << endl;
-    // }
-    // fileOut.close();
-    // cout << "collecting search data..." << endl;
-    // ofstream file2Out;
-    // file2Out.open("hashChainSearchSetB.txt");
-    // for(int j = 0; j < 400; j++)
-    // {
-    //     file2Out << search[j] << endl;
-    // }
-    // file2Out.close();
+    //write to a file
+    cout << "collecting insert data..." << endl;
+    ofstream fileOut;
+    fileOut.open("hashChainInsertSetB.txt"); //just change this title when we run it w the different data set
+    for(int i = 0; i < 400; i++)
+    {
+        fileOut << insert[i] << endl;
+    }
+    fileOut.close();
+    cout << "collecting search data..." << endl;
+    ofstream file2Out;
+    file2Out.open("hashChainSearchSetB.txt");
+    for(int j = 0; j < 400; j++)
+    {
+        file2Out << search[j] << endl;
+    }
+    file2Out.close();
 
     cout << "collecting insert collisions..." << endl;
     ofstream colFile1;
