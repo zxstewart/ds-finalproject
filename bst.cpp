@@ -79,33 +79,6 @@ void BST:: destroyNode(Node *currNode)
      }
  }
 
-// void BST::print2DUtilHelper(Node *currNode, int space)
-// {
-//     if (currNode == NULL)
-//     {
-//         return;
-//     }
-
-//     space += COUNT; //idk what this is doing or why there's an error...
-
-//     // Process right child first
-//     print2DUtilHelper(currNode->right, space);
-//     // Print current node after space
-//     // count
-//     printf("\n");
-//     for (int i = COUNT; i < space; i++)
-//     {
-//         printf(" ");
-//         printf("%d\n", currNode->key);
-//     }
-//     // Process left child
-//     print2DUtilHelper(currNode->left, space);
-// }
-
-// void BST::print2DUtil( int space)
-// {
-//   print2DUtilHelper(root, space);
-// }
 
 Node* BST:: addNodeHelper(Node* currNode, int data)
 {
