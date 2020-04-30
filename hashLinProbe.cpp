@@ -2,7 +2,7 @@
 #include <list> //idk if we need this but included just in case
 #include <iostream>
 #include <fstream>
-#include <sstream> 
+#include <sstream>
 #include <chrono>
 using namespace std;
 //open addressing means values are stored directly in the hash table rather than using buckets
@@ -64,8 +64,8 @@ unsigned int HashTable::hashFunction(int key)
     }
     while(table[idx] != NULL && table[idx]->key != key && added == false)
     {
-        idx++;
         colNum++;
+        idx++;
         idx %= capacity;
     }
     return added;
@@ -174,10 +174,10 @@ int main()
         for(int i = 0; i < 100; i++)
         {
             add = HTable.insertItem(testDataA[ctr]);
-            insertCol[ctr] = HTable.getNumOfCollision();
             ctr++;
         }
         chrono::steady_clock::time_point _end(chrono::steady_clock::now());
+        insertCol[spot] = HTable.getNumOfCollision();
         time = chrono::duration_cast<chrono::duration<float>>(_end - _start).count();
         insert[spot] = (time/100);//recording average insert time 
         //reset time here
@@ -192,33 +192,33 @@ int main()
         for(int i = 0; i < 100; i++)
         {
             find = HTable.searchItem(searcher[i]);
-            searchCol[i] = HTable.getNumOfCollision();
         }
         chrono::steady_clock::time_point _end2(chrono::steady_clock::now());
+        searchCol[spot] = HTable.getNumOfCollision();
         time = chrono::duration_cast<chrono::duration<float>>(_end2 - _start2).count();
         search[spot] = (time/100);//avg
         time =0;//reset time here
         spot++;//incrementing the places in insert and search arrays
     }
     //write to a file
-    // cout << "collecting insert data..." << endl;
-    // ofstream fileOut;
-    // fileOut.open("hashLinProbeInsertSetB.txt"); //just change this title when we run it w the different data set
-    // for(int i = 0; i < 400; i++)
-    // {
-    //     fileOut << insert[i] << endl;
-    // }
-    // fileOut.close();
-    // cout << "collecting search data..." << endl;
-    // ofstream file2Out;
-    // file2Out.open("hashLinProbeSearchSetB.txt");
-    // for(int j = 0; j < 400; j++)
-    // {
-    //     file2Out << search[j] << endl;
-    // }
-    // file2Out.close();
+    cout << "collecting insert data..." << endl;
+    ofstream fileOut;
+    fileOut.open("hashLinProbeInsertSetB.txt"); //just change this title when we run it w the different data set
+    for(int i = 0; i < 400; i++)
+    {
+        fileOut << insert[i] << endl;
+    }
+    fileOut.close();
+    cout << "collecting search data..." << endl;
+    ofstream file2Out;
+    file2Out.open("hashLinProbeSearchSetB.txt");
+    for(int j = 0; j < 400; j++)
+    {
+        file2Out << search[j] << endl;
+    }
+    file2Out.close();
 
-    cout << "collecting insert collisions" << endl;
+    cout << "collecting insert collisions..." << endl;
     ofstream colFile1;
     colFile1.open("hashLinProbeInsertColA.txt");
     for(int i = 0; i < 400; i++)
@@ -227,7 +227,7 @@ int main()
     }
     colFile1.close();
 
-    cout << "collecting search collisions" << endl;
+    cout << "collecting search collisions..." << endl;
     ofstream colFile2;
     colFile2.open("hashLinProbeSearchColA.txt");
     for(int i = 0; i < 400; i++)
