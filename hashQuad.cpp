@@ -100,6 +100,7 @@ node* HashTable:: searchItem(int key)
 
     while(table[idx] != NULL)
     {
+        colNum++;
         if(table[idx]->key == key)
         {
             return table[idx];
@@ -133,6 +134,8 @@ int main()
     int testDataB[40000];
     float insert[400];
     float search[400];
+    int insertCol[400];
+    int searchCol[400];
 
     ifstream myFile("dataSetB.csv");
         if(!myFile.is_open())
@@ -169,6 +172,7 @@ int main()
             add = HTable.insertItem(testDataA[ctr]);
             ctr++;
         }
+        insertCol[spot] = HTable.getNumOfCollision();
         chrono::steady_clock::time_point _end(chrono::steady_clock::now());
         time = chrono::duration_cast<chrono::duration<float>>(_end - _start).count();
         insert[spot] = (time/100);//recording average insert time 
@@ -186,26 +190,45 @@ int main()
             idk = HTable.searchItem(searcher[i]);
         }
         chrono::steady_clock::time_point _end2(chrono::steady_clock::now());
+        searchCol[spot] = HTable.getNumOfCollision();
         time = chrono::duration_cast<chrono::duration<float>>(_end2 - _start2).count();
         search[spot] = (time/100);//avg
         time =0;//reset time here
         spot++;//incrementing the places in insert and search arrays
     }
-    //write to a file
-    cout << "collecting insert data..." << endl;
-    ofstream fileOut;
-    fileOut.open("hashQuadInsertSetB.txt"); //just change this title when we run it w the different data set
+    // //write to a file
+    // cout << "collecting insert data..." << endl;
+    // ofstream fileOut;
+    // fileOut.open("hashQuadInsertSetB.txt"); //just change this title when we run it w the different data set
+    // for(int i = 0; i < 400; i++)
+    // {
+    //     fileOut << insert[i] << endl;
+    // }
+    // fileOut.close();
+    // cout << "collecting search data..." << endl;
+    // ofstream file2Out;
+    // file2Out.open("hashQuadSearchSetB.txt");
+    // for(int j = 0; j < 400; j++)
+    // {
+    //     file2Out << search[j] << endl;
+    // }
+    // file2Out.close();
+
+     cout << "collecting insert collisions..." << endl;
+    ofstream colFile1;
+    colFile1.open("hashQuadInsertColB.txt");
     for(int i = 0; i < 400; i++)
     {
-        fileOut << insert[i] << endl;
+        colFile1 << insertCol[i] << endl;
     }
-    fileOut.close();
-    cout << "collecting search data..." << endl;
-    ofstream file2Out;
-    file2Out.open("hashQuadSearchSetB.txt");
-    for(int j = 0; j < 400; j++)
+    colFile1.close();
+
+    cout << "collecting search collisions..." << endl;
+    ofstream colFile2;
+    colFile2.open("hashQuadSearchColB.txt");
+    for(int i = 0; i < 400; i++)
     {
-        file2Out << search[j] << endl;
+        colFile2 << searchCol[i] << endl;
     }
-    file2Out.close();
+    colFile2.close();
 }
