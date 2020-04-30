@@ -18,8 +18,8 @@ class HashTable
 
     // Pointer to an array containing buckets
     node* *table;   //this is the linked list array of size 400 that stores integers
-    //int colNum =0;  //renamed to make it shorter and less of a pain to type out
     node* createNode(int key, node* next);
+    int colNum = 0;
 public:
     HashTable();  // Constructor
     bool isEmpty(int index); //check if the table is empty
@@ -29,7 +29,7 @@ public:
     int numIndexItems(int index);//num items in the bucket (LL) at specified table index
     void printTable();
     node* searchItem(int key);//searches for ptr with given key
-    //int getNumOfCollision(); don't need this here because chain hashing avoids collisions
+    int getCol();
 };
 
 //-------------------------------BEGIN CLASS FUNCTIONS-------------------------------------------------------------------
@@ -86,6 +86,7 @@ unsigned int HashTable::hashFunction(int key)
      }
      else//meaning there is already a value in its spot
      {
+         colNum++;
          node* ptr = table[index];// first item in bucket
          node* n = new node;//new item
          n->key = key; //initializing key
@@ -144,6 +145,7 @@ node* HashTable:: searchItem(int key)
     node* ptr = table[bucket]; //pointer that points to first item in the bucket
     while((ptr->key) && (ptr!= NULL)) // != NULL scan entire list (as long as ptr points to something)
     {
+        colNum++;
         if(ptr->key == key)//seeing if the keys match
         {
             foundKey = true;//mark that we found a match
@@ -152,6 +154,11 @@ node* HashTable:: searchItem(int key)
         ptr = ptr->next;
     }
     return NULL;
+}
+
+int HashTable::getCol()
+{
+    return colNum;
 }
 
 //------------------------------------------MAIN-------------------------------------------
@@ -163,8 +170,10 @@ int main()
     int testDataB[40000];
     float insert[400];
     float search[400];
+    int insertCol[400];
+    int searchCol[400];
 
-    ifstream myFile("dataSetA.csv");
+    ifstream myFile("dataSetB.csv");
         if(!myFile.is_open())
         {
             cout << "file failed to open" << endl;
@@ -200,6 +209,7 @@ int main()
             ctr++;
         }
         chrono::steady_clock::time_point _end(chrono::steady_clock::now());
+        insertCol[spot] = HTable.getCol();
         time = chrono::duration_cast<chrono::duration<float>>(_end - _start).count();
         insert[spot] = (time/100);//recording average insert time 
         //reset time here
@@ -215,26 +225,45 @@ int main()
             find = HTable.searchItem(searcher[i]);
         }
         chrono::steady_clock::time_point _end2(chrono::steady_clock::now());
+        searchCol[spot] = HTable.getCol();
         time = chrono::duration_cast<chrono::duration<float>>(_end2 - _start2).count();
         search[spot] = (time/100);//avg
         time =0;//reset time here
         spot++;//incrementing the places in insert and search arrays
     }
-    //write to a file
-    cout << "collecting insert data..." << endl;
-    ofstream fileOut;
-    fileOut.open("hashChainInsertSetA.txt"); //just change this title when we run it w the different data set
+    // //write to a file
+    // cout << "collecting insert data..." << endl;
+    // ofstream fileOut;
+    // fileOut.open("hashChainInsertSetB.txt"); //just change this title when we run it w the different data set
+    // for(int i = 0; i < 400; i++)
+    // {
+    //     fileOut << insert[i] << endl;
+    // }
+    // fileOut.close();
+    // cout << "collecting search data..." << endl;
+    // ofstream file2Out;
+    // file2Out.open("hashChainSearchSetB.txt");
+    // for(int j = 0; j < 400; j++)
+    // {
+    //     file2Out << search[j] << endl;
+    // }
+    // file2Out.close();
+
+    cout << "collecting insert collisions..." << endl;
+    ofstream colFile1;
+    colFile1.open("hashChainInsertColB.txt");
     for(int i = 0; i < 400; i++)
     {
-        fileOut << insert[i] << endl;
+        colFile1 << insertCol[i] << endl;
     }
-    fileOut.close();
-    cout << "collecting search data..." << endl;
-    ofstream file2Out;
-    file2Out.open("hashChainSearchSetA.txt");
-    for(int j = 0; j < 400; j++)
+    colFile1.close();
+
+    cout << "collecting search collisions..." << endl;
+    ofstream colFile2;
+    colFile2.open("hashChainSearchColB.txt");
+    for(int i = 0; i < 400; i++)
     {
-        file2Out << search[j] << endl;
+        colFile2 << searchCol[i] << endl;
     }
-    file2Out.close();
+    colFile2.close();
 }
